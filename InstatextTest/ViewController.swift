@@ -9,15 +9,27 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    // MARK: - Properties
     
+    private let saveButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Сохранить", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .light)
+//            button.backgroundColor = .blue
+        button.isEnabled = false
+        button.alpha = 0.5
+        button.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+        return button
+    }()
     
-    let conteiner: UIScrollView = {
+    private let conteiner: UIScrollView = {
         let scrollView = UIScrollView()
 //        scrollView.backgroundColor = .blue
         return scrollView
     }()
         
-    var textView: UITextView = {
+    private let textView: UITextView = {
         let textView = UITextView()
         
         textView.text = "Вставьте сюда текст или начните печатать"
@@ -32,13 +44,53 @@ class ViewController: UIViewController {
         textView.layer.shadowColor = UIColor.lightGray.cgColor
         textView.layer.shadowRadius = 2
         textView.layer.shadowOpacity = 0.5
-        
-        textView.isEditable = true
-        textView.keyboardAppearance = .light
-        textView.keyboardType = .default
-        
+  
         return textView
     }()
+    
+    // MARK: - Actions
+    
+    @objc func imageWasSaved(_ image: UIImage, error: Error?, context: UnsafeMutableRawPointer) {
+          if let error = error {
+              print(error.localizedDescription)
+              return
+          }
+        
+          UIApplication.shared.open(URL(string:"photos-redirect://")!)
+      }
+        
+      func takeScreenshot(of view: UIView) {
+          UIGraphicsBeginImageContextWithOptions(
+              CGSize(width: view.bounds.width, height: view.bounds.height),
+              false,
+              2
+          )
+          view.layer.render(in: UIGraphicsGetCurrentContext()!)
+          let screenshot = UIGraphicsGetImageFromCurrentImageContext()!
+          UIGraphicsEndImageContext()
+
+          UIImageWriteToSavedPhotosAlbum(screenshot, self, #selector(imageWasSaved), nil)
+      }
+    
+    @objc func saveButtonTapped() {
+        UIView.animate(withDuration: 0.2, animations: { [self] in
+              self.saveButton.alpha = 0.5
+          }) { _ in
+              self.saveButton.alpha = 1
+          }
+        
+        let a = textView.text // создаю переменную и добавляю то, что ты написала
+        textView.text = "" // убираю текст из textview
+        textView.autocorrectionType = .no //убираю автокоррекцию
+        textView.text = a // возвращаю изначальный пользовательский текст
+        
+        takeScreenshot(of: textView) // делаю скриншот
+        
+//        textView.text = ""
+        textView.autocorrectionType = .yes
+//        textView.text = a
+      }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,7 +116,7 @@ class ViewController: UIViewController {
     }
     
     private func setupHierarchy() {
-        
+        view.addSubview(saveButton)
         conteiner.addSubview(textView)
         view.addSubview(conteiner)
     }
@@ -79,9 +131,14 @@ class ViewController: UIViewController {
         conteiner.translatesAutoresizingMaskIntoConstraints = false
         conteiner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         conteiner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        
         conteiner.widthAnchor.constraint(equalToConstant: 304).isActive = true
         conteiner.heightAnchor.constraint(equalToConstant: 504).isActive = true
+        
+        saveButton.translatesAutoresizingMaskIntoConstraints = false
+        saveButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        saveButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 40).isActive = true
+        saveButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        saveButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -108,15 +165,23 @@ extension ViewController: UITextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.lightGray {
-            textView.text = nil
+            textView.text = ""
             textView.textColor = UIColor.black
         }
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        saveButton.isEnabled = true
+        saveButton.alpha = 1
+        textView.autocorrectionType = .no
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = "Вставьте сюда текст или начните печатать"
             textView.textColor = UIColor.lightGray
+            saveButton.isEnabled = false
+            saveButton.alpha = 0.5
         }
     }
 }
