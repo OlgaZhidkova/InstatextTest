@@ -79,7 +79,16 @@ class ViewController: UIViewController {
               self.saveButton.alpha = 1
           }
         
-        takeScreenshot(of: textView)
+        let a = textView.text // создаю переменную и добавляю то, что ты написала
+        textView.text = "" // убираю текст из textview
+        textView.autocorrectionType = .no //убираю автокоррекцию
+        textView.text = a // возвращаю изначальный пользовательский текст
+        
+        takeScreenshot(of: textView) // делаю скриншот
+        
+//        textView.text = ""
+        textView.autocorrectionType = .yes
+//        textView.text = a
       }
     
 
