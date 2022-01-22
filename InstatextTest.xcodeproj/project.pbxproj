@@ -56,8 +56,8 @@
 		77D5FAFF279AD2170062B09E /* InstatextTest */ = {
 			isa = PBXGroup;
 			children = (
-				77D5FB00279AD2170062B09E /* AppDelegate.swift */,
 				77D5FB02279AD2170062B09E /* SceneDelegate.swift */,
+				77D5FB00279AD2170062B09E /* AppDelegate.swift */,
 				77D5FB04279AD2170062B09E /* ViewController.swift */,
 				77D5FB06279AD2170062B09E /* Main.storyboard */,
 				77D5FB09279AD21B0062B09E /* Assets.xcassets */,
