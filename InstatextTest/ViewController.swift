@@ -48,7 +48,37 @@ class ViewController: UIViewController {
         return textView
     }()
     
-    // MARK: - Actions
+    private var toolBar: UIToolbar = {
+        let toolBar = UIToolbar()
+        var items = [
+            UIBarButtonItem(image: UIImage(systemName: "character.cursor.ibeam"), style: .plain, target: target, action: #selector(tapFontButton)),
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            UIBarButtonItem(image: UIImage(systemName: "keyboard"), style: .plain, target: target, action: #selector(tapKeyboardButton))
+        ]
+        toolBar.setItems(items, animated: false)
+        toolBar.backgroundColor = .white
+        return toolBar
+    }()
+    
+    // MARK: - Toolbar Actions
+    
+    @objc func tapFontButton() {
+        
+     }
+    
+    var keyboardIsActive = false
+    
+    @objc func tapKeyboardButton() {
+        if keyboardIsActive == false {
+            self.textView.becomeFirstResponder()
+            keyboardIsActive = true
+        } else {
+            self.textView.resignFirstResponder()
+            keyboardIsActive = false
+        }
+    }
+    
+    // MARK: - ScreenShot Actions
     
     @objc func imageWasSaved(_ image: UIImage, error: Error?, context: UnsafeMutableRawPointer) {
           if let error = error {
@@ -79,23 +109,31 @@ class ViewController: UIViewController {
               self.saveButton.alpha = 1
           }
         
-        let a = textView.text // создаю переменную и добавляю то, что ты написала
-        textView.text = "" // убираю текст из textview
-        textView.autocorrectionType = .no //убираю автокоррекцию
-        textView.text = a // возвращаю изначальный пользовательский текст
+        let myText = textView.text
+        textView.text = ""
+        textView.autocorrectionType = .no
+        textView.text = myText
         
-        takeScreenshot(of: textView) // делаю скриншот
+        takeScreenshot(of: textView)
         
-//        textView.text = ""
         textView.autocorrectionType = .yes
-//        textView.text = a
       }
     
+    // MARK: - Notification Actiions
+    
+    @objc func keyboardWillAppear(_ notification: Notification) {
+        conteiner.contentOffset = CGPoint(x: 0, y: 140)
+    }
+    
+    @objc func keyboardWillDisappear(_ notification: Notification) {
+        conteiner.contentOffset = CGPoint.zero
+    }
+    
+    // MARK: - Lifecicle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupView()
         setupHierarchy()
         setupLayout()
         
@@ -106,19 +144,20 @@ class ViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    // MARK: - Initial
+    
     deinit {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    private func setupView() {
-//        view.backgroundColor = .systemTeal
-    }
+    // MARK: - Settings
     
     private func setupHierarchy() {
         view.addSubview(saveButton)
         conteiner.addSubview(textView)
         view.addSubview(conteiner)
+        view.addSubview(toolBar)
     }
     
     private func setupLayout() {
@@ -132,33 +171,25 @@ class ViewController: UIViewController {
         conteiner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         conteiner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         conteiner.widthAnchor.constraint(equalToConstant: 304).isActive = true
-        conteiner.heightAnchor.constraint(equalToConstant: 504).isActive = true
+        conteiner.heightAnchor.constraint(equalToConstant: 584).isActive = true
         
         saveButton.translatesAutoresizingMaskIntoConstraints = false
         saveButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         saveButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 40).isActive = true
         saveButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
         saveButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        toolBar.translatesAutoresizingMaskIntoConstraints = false
+        let guide = self.view.safeAreaLayoutGuide
+        toolBar.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
+        toolBar.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
+        toolBar.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        toolBar.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor).isActive = true
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         textView.resignFirstResponder()
     }
-    
-    @objc func keyboardWillAppear(_ notification: Notification) {
-//        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
-//            return
-//        }
-//        view.frame.origin.y = -keyboardSize.height
-//        view.frame.origin.y = -100
-        conteiner.contentOffset = CGPoint(x: 0, y: 100)
-    }
-    
-    @objc func keyboardWillDisappear(_ notification: Notification) {
-//        view.frame.origin.y = 0
-        conteiner.contentOffset = CGPoint.zero
-    }
-    
 }
 
 extension ViewController: UITextViewDelegate {
@@ -173,7 +204,6 @@ extension ViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         saveButton.isEnabled = true
         saveButton.alpha = 1
-        textView.autocorrectionType = .no
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -185,4 +215,8 @@ extension ViewController: UITextViewDelegate {
         }
     }
 }
+
+
+
+
 
