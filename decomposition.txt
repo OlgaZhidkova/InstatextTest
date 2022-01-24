@@ -1,0 +1,38 @@
+Декомпозиция 
+
+1. Создать textView
+- создать плейсхолдер - используем Delegate: textViewDidBeginEditing, textViewDidEndEditing
+- отключить scroll 
+- смещение вместе с клавиатурой - используем Notification, scrollView в качестве контейнера для  textView
+
+2. Создать кнопку Сохранить
+- кнопка кнопка не активна - используем Delegate: textViewDidEndEditing
+- кнопка активна: - используем Delegate: textViewDidChange
+
+3. Нажатие кнопки Сохранить делает скриншот
+- используем UIGraphics
+- изменяем Info.plist (Privacy - Photo Library Additions Usage Description)
+
+4. На скриншоте не отображаются исправления текста
+- используем autocorrectionType
+
+5. Создать  toolbar 
+- с 2 кнопками
+
+6. Создать кнопку переключения клавиатуры
+- меняем у textView becomeFirstResponder и resignFirstResponder
+
+7. Создать кнопку изменения шрифта
+- создаем view со scrollView внутри
+- в scrollView вставляем segmentedControl
+- высота view  равна высоте клавиатуры: создаем спец класс для вычисления высоты клавиатуры
+
+8. Создаем функцию изменения шрифта в SegmentedControl 
+- используем NSAttributedString
+- изменение выделенного текста: selectedRange
+- изменение печатаемого текста:  typingAttributes
+
+9. По нажатию кнопок меняем представление : клавиатура/ выбор шрифта
+- меняем inputView
+
+Время выполнения задания: 20 ч 
