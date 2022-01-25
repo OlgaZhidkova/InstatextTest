@@ -1,0 +1,44 @@
+Декомпозиция 
+
+1. Создать textView
+- создать плейсхолдер - используем Delegate: textViewDidBeginEditing, textViewDidEndEditing
+- отключить scroll 
+- смещение вместе с клавиатурой - использовать scrollView в качестве контейнера для  textView
+
+2. Создать кнопку Сохранить
+- кнопка кнопка не активна - использовать Delegate: textViewDidEndEditing
+- кнопка активна: - использовать Delegate: textViewDidChange
+
+3. Нажатие кнопки Сохранить делает скриншот
+- использовать UIGraphics
+- изменить Info.plist (Privacy - Photo Library Additions Usage Description)
+
+4. На скриншоте не отображаются исправления текста
+- использовать autocorrectionType
+
+5. Создать  toolbar 
+- с 2 кнопками
+
+6. Создать кнопку переключения клавиатуры
+-  с помощью изменения у textView becomeFirstResponder и resignFirstResponder
+
+7. Создать кнопку изменения шрифта
+- создать view со scrollView внутри
+- в scrollView вставить segmentedControl
+- высота view  равна высоте клавиатуры: добавить спец класс для вычисления высоты клавиатуры
+
+8. Создать функцию изменения шрифта в SegmentedControl 
+- использовать NSAttributedString
+- изменение выделенного текста: selectedRange
+- изменение печатаемого текста:  typingAttributes
+
+9. По нажатию кнопок меняется представление : клавиатура/ выбор шрифта
+- с помощью изменения inputView
+
+10. Применить к проекту паттерн MVP
+- создать архитектуру папок
+- создать Model
+- создать Presenter
+- передать логику из ViewController в Presenter
+
+Время выполнения задания: 24 ч 
