@@ -9,13 +9,15 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    var presenter: MainViewPresenterProtocol!
+    
     // MARK: - Properties
     
     private let saveButton: UIButton = {
         let button = UIButton()
         button.setTitle("Сохранить", for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .light)
+        button.titleLabel?.font = .systemFont(ofSize: Metric.buttonFontSize, weight: .light)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isEnabled = false
         button.alpha = 0.5
@@ -33,14 +35,17 @@ class ViewController: UIViewController {
         let textView = UITextView()
         textView.text = "Вставьте сюда текст или начните печатать"
         textView.textColor = .lightGray
-        textView.font = UIFont.systemFont(ofSize: 17)
-        textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        textView.font = UIFont.systemFont(ofSize: Metric.regularFontSize)
+        textView.textContainerInset = UIEdgeInsets(top: Metric.textViewPadding,
+                                                   left: Metric.textViewPadding,
+                                                   bottom: Metric.textViewPadding,
+                                                   right: Metric.textViewPadding)
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.isScrollEnabled = false
         textView.layer.masksToBounds = false
         textView.layer.shadowOffset = .zero
         textView.layer.shadowColor = UIColor.lightGray.cgColor
-        textView.layer.shadowRadius = 2
+        textView.layer.shadowRadius = Metric.textViewShadowRadius
         textView.layer.shadowOpacity = 0.5
         return textView
     }()
@@ -70,10 +75,7 @@ class ViewController: UIViewController {
         return toolBar
     }()
     
-    private let textFontView: UIView = {
-        let view = UIView()
-        return view
-    }()
+    private let textFontView = UIView()
     
     private let controlConteiner: UIScrollView = {
         let scrollView = UIScrollView()
@@ -101,7 +103,7 @@ class ViewController: UIViewController {
         textView.inputView = nil
         textView.reloadInputViews()
         
-        if keyboardIsActive == false {
+        if !keyboardIsActive {
             textView.becomeFirstResponder()
             keyboardIsActive = true
         } else {
@@ -116,11 +118,9 @@ class ViewController: UIViewController {
         textView.reloadInputViews()
         textView.becomeFirstResponder()
         keyboardIsActive = false
-        
      }
     
     func selectedText(font: UIFont) {
-        let font = font
         let range = textView.selectedRange
         let string = NSMutableAttributedString(attributedString:
           textView.attributedText)
@@ -130,7 +130,6 @@ class ViewController: UIViewController {
     }
     
     func typingText(font: UIFont) {
-        let font = font
         textView.typingAttributes = [NSAttributedString.Key.font: font]
     }
     
@@ -138,23 +137,23 @@ class ViewController: UIViewController {
         var font = UIFont()
         switch sender.selectedSegmentIndex {
         case 0:
-            font = .systemFont(ofSize: 23, weight: .bold)
+            font = .systemFont(ofSize: Metric.titleFontSize, weight: .bold)
             selectedText(font: font)
             typingText(font: font)
         case 1:
-            font = .systemFont(ofSize: 18, weight: .bold)
+            font = .systemFont(ofSize: Metric.headerFontSize, weight: .bold)
             selectedText(font: font)
             typingText(font: font)
         case 2:
-            font = .systemFont(ofSize: 14, weight: .semibold)
+            font = .systemFont(ofSize: Metric.regularFontSize, weight: .semibold)
             selectedText(font: font)
             typingText(font: font)
         case 3:
-            font = .systemFont(ofSize: 14, weight: .regular)
+            font = .systemFont(ofSize: Metric.regularFontSize, weight: .regular)
             selectedText(font: font)
             typingText(font: font)
         case 4:
-            font = .systemFont(ofSize: 12, weight: .light)
+            font = .systemFont(ofSize: Metric.additionalFontSize, weight: .light)
             selectedText(font: font)
             typingText(font: font)
         default:
@@ -177,7 +176,6 @@ class ViewController: UIViewController {
         textView.text = myText
         
         takeScreenshot(of: textView)
-        
         textView.autocorrectionType = .yes
       }
     
@@ -190,36 +188,17 @@ class ViewController: UIViewController {
         view.layer.render(in: UIGraphicsGetCurrentContext()!)
         let screenshot = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-
         UIImageWriteToSavedPhotosAlbum(screenshot, self, #selector(imageWasSaved), nil)
     }
     
     @objc func imageWasSaved(_ image: UIImage, error: Error?, context: UnsafeMutableRawPointer) {
-          if let error = error {
-              print(error.localizedDescription)
-              return
+        if let error = error {
+            print(error.localizedDescription)
+            return
           }
-          UIApplication.shared.open(URL(string:"photos-redirect://")!)
+        UIApplication.shared.open(URL(string:"photos-redirect://")!)
       }
         
-    // MARK: - Notification Actiions
-    
-    @objc func keyboardWillAppear(_ notification: Notification) {
-        textViewConteiner.contentOffset = CGPoint(x: 0, y: 100)
-    }
-    
-    @objc func keyboardWillDisappear(_ notification: Notification) {
-        textViewConteiner.contentOffset = CGPoint.zero
-    }
-    
-    // MARK: - Functions
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        textView.inputView = nil
-        textView.reloadInputViews()
-        textView.resignFirstResponder()
-    }
-    
     // MARK: - Lifecicle
 
     override func viewDidLoad() {
@@ -230,19 +209,6 @@ class ViewController: UIViewController {
         setupLayout()
         
         textView.delegate = self
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-       
-    }
-    
-    
-    // MARK: - Initial
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK: - Settings
@@ -257,25 +223,29 @@ class ViewController: UIViewController {
     }
     
     private func setupLayout() {
+        let textViewSize = view.frame.width - Metric.textViewHorizontalOffsets * 2
+        
         NSLayoutConstraint.activate([
             textView.centerXAnchor.constraint(equalTo: textViewConteiner.centerXAnchor),
-            textView.centerYAnchor.constraint(equalTo: textViewConteiner.centerYAnchor, constant: 50),
-            textView.widthAnchor.constraint(equalToConstant: view.frame.size.width - 80),
-            textView.heightAnchor.constraint(equalToConstant: view.frame.size.width - 80),
+            textView.centerYAnchor.constraint(equalTo: textViewConteiner.centerYAnchor),
+            textView.widthAnchor.constraint(equalToConstant: textViewSize),
+            textView.heightAnchor.constraint(equalToConstant: textViewSize),
             
             textViewConteiner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             textViewConteiner.topAnchor.constraint(equalTo: saveButton.bottomAnchor),
-            textViewConteiner.widthAnchor.constraint(equalToConstant: view.frame.size.width - 76),
-            textViewConteiner.heightAnchor.constraint(equalToConstant: 450),
+            textViewConteiner.widthAnchor.constraint(equalToConstant: textViewSize + Metric.textViewShadowRadius * 2),
+            textViewConteiner.bottomAnchor.constraint(equalTo: toolBar.topAnchor),
             
-            saveButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            saveButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
-            saveButton.widthAnchor.constraint(equalToConstant: 100),
-            saveButton.heightAnchor.constraint(equalToConstant: 40),
+            saveButton.trailingAnchor.constraint(equalTo: view.trailingAnchor,
+                                                 constant: Metric.saveButtonRightOffset),
+            saveButton.topAnchor.constraint(equalTo: view.topAnchor,
+                                            constant: Metric.saveButtonTopOffset),
+            saveButton.widthAnchor.constraint(equalToConstant: Metric.saveButtonWidth),
+            saveButton.heightAnchor.constraint(equalToConstant: Metric.saveButtonHeight),
             
             toolBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             toolBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            toolBar.heightAnchor.constraint(equalToConstant: 40),
+            toolBar.heightAnchor.constraint(equalToConstant: Metric.toolBarHeight),
             toolBar.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor),
             
             controlConteiner.centerYAnchor.constraint(equalTo: textFontView.centerYAnchor),
@@ -284,12 +254,14 @@ class ViewController: UIViewController {
             controlConteiner.trailingAnchor.constraint(equalTo: textFontView.trailingAnchor),
             
             textFontControl.centerYAnchor.constraint(equalTo: controlConteiner.centerYAnchor),
-            textFontControl.heightAnchor.constraint(equalToConstant: 60),
+            textFontControl.heightAnchor.constraint(equalToConstant: Metric.textFontControlHeight),
             textFontControl.trailingAnchor.constraint(equalTo: controlConteiner.trailingAnchor),
             textFontControl.leadingAnchor.constraint(equalTo: controlConteiner.leadingAnchor)
         ])
     }
 }
+
+// MARK: - TextView Delegate
 
 extension ViewController: UITextViewDelegate {
     
@@ -316,5 +288,32 @@ extension ViewController: UITextViewDelegate {
         keyboardIsActive = false
     }
 }
+
+// MARK: - Metrics
+
+extension ViewController {
+    
+    enum Metric {
+        static let titleFontSize: CGFloat = 23
+        static let headerFontSize: CGFloat = 18
+        static let buttonFontSize: CGFloat = 17
+        static let regularFontSize: CGFloat = 14
+        static let additionalFontSize: CGFloat = 12
+        
+        static let textViewPadding: CGFloat = 10
+        static let textViewShadowRadius: CGFloat = 2
+        
+        static let textViewHorizontalOffsets: CGFloat = 50
+        
+        static let saveButtonWidth: CGFloat = 100
+        static let saveButtonHeight: CGFloat = 40
+        static let saveButtonTopOffset: CGFloat = 40
+        static let saveButtonRightOffset: CGFloat = -20
+        
+        static let toolBarHeight: CGFloat = 40
+        static let textFontControlHeight: CGFloat = 60
+    }
+}
+
 
 

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		77D5E8D6279F2AB000B1E20B /* KeyboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D5E8D5279F2AB000B1E20B /* KeyboardService.swift */; };
+		77D5E8EC27A0666400B1E20B /* TextViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D5E8EB27A0666400B1E20B /* TextViewModel.swift */; };
+		77D5E8EE27A067C100B1E20B /* Presenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D5E8ED27A067C100B1E20B /* Presenter.swift */; };
 		77D5FB01279AD2170062B09E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D5FB00279AD2170062B09E /* AppDelegate.swift */; };
 		77D5FB03279AD2170062B09E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D5FB02279AD2170062B09E /* SceneDelegate.swift */; };
 		77D5FB05279AD2170062B09E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D5FB04279AD2170062B09E /* ViewController.swift */; };
@@ -18,6 +20,8 @@
 
 /* Begin PBXFileReference section */
 		77D5E8D5279F2AB000B1E20B /* KeyboardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardService.swift; sourceTree = "<group>"; };
+		77D5E8EB27A0666400B1E20B /* TextViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewModel.swift; sourceTree = "<group>"; };
+		77D5E8ED27A067C100B1E20B /* Presenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presenter.swift; sourceTree = "<group>"; };
 		77D5FAFD279AD2170062B09E /* InstatextTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstatextTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		77D5FB00279AD2170062B09E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		77D5FB02279AD2170062B09E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -39,6 +43,69 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		77D5E8E527A064E100B1E20B /* Resourses */ = {
+			isa = PBXGroup;
+			children = (
+				77D5FB06279AD2170062B09E /* Main.storyboard */,
+				77D5FB0B279AD21B0062B09E /* LaunchScreen.storyboard */,
+				77D5FB09279AD21B0062B09E /* Assets.xcassets */,
+				77D5FB0E279AD21B0062B09E /* Info.plist */,
+			);
+			path = Resourses;
+			sourceTree = "<group>";
+		};
+		77D5E8E627A0653A00B1E20B /* Sourses */ = {
+			isa = PBXGroup;
+			children = (
+				77D5E8EA27A0656E00B1E20B /* Model */,
+				77D5E8E927A0656500B1E20B /* View */,
+				77D5E8E827A0655500B1E20B /* Presenter */,
+			);
+			path = Sourses;
+			sourceTree = "<group>";
+		};
+		77D5E8E727A0654400B1E20B /* App */ = {
+			isa = PBXGroup;
+			children = (
+				77D5FB00279AD2170062B09E /* AppDelegate.swift */,
+				77D5FB02279AD2170062B09E /* SceneDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		77D5E8E827A0655500B1E20B /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				77D5E8ED27A067C100B1E20B /* Presenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		77D5E8E927A0656500B1E20B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				77D5FB04279AD2170062B09E /* ViewController.swift */,
+				77D5E8EF27A06C1000B1E20B /* ServiceFiles */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		77D5E8EA27A0656E00B1E20B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				77D5E8EB27A0666400B1E20B /* TextViewModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		77D5E8EF27A06C1000B1E20B /* ServiceFiles */ = {
+			isa = PBXGroup;
+			children = (
+				77D5E8D5279F2AB000B1E20B /* KeyboardService.swift */,
+			);
+			path = ServiceFiles;
+			sourceTree = "<group>";
+		};
 		77D5FAF4279AD2170062B09E = {
 			isa = PBXGroup;
 			children = (
@@ -58,14 +125,9 @@
 		77D5FAFF279AD2170062B09E /* InstatextTest */ = {
 			isa = PBXGroup;
 			children = (
-				77D5FB02279AD2170062B09E /* SceneDelegate.swift */,
-				77D5FB00279AD2170062B09E /* AppDelegate.swift */,
-				77D5FB04279AD2170062B09E /* ViewController.swift */,
-				77D5E8D5279F2AB000B1E20B /* KeyboardService.swift */,
-				77D5FB06279AD2170062B09E /* Main.storyboard */,
-				77D5FB09279AD21B0062B09E /* Assets.xcassets */,
-				77D5FB0B279AD21B0062B09E /* LaunchScreen.storyboard */,
-				77D5FB0E279AD21B0062B09E /* Info.plist */,
+				77D5E8E727A0654400B1E20B /* App */,
+				77D5E8E627A0653A00B1E20B /* Sourses */,
+				77D5E8E527A064E100B1E20B /* Resourses */,
 			);
 			path = InstatextTest;
 			sourceTree = "<group>";
@@ -141,9 +203,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77D5E8EE27A067C100B1E20B /* Presenter.swift in Sources */,
 				77D5FB05279AD2170062B09E /* ViewController.swift in Sources */,
 				77D5E8D6279F2AB000B1E20B /* KeyboardService.swift in Sources */,
 				77D5FB01279AD2170062B09E /* AppDelegate.swift in Sources */,
+				77D5E8EC27A0666400B1E20B /* TextViewModel.swift in Sources */,
 				77D5FB03279AD2170062B09E /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -294,7 +358,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = InstatextTest/Info.plist;
+				INFOPLIST_FILE = InstatextTest/Resourses/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -322,7 +386,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = InstatextTest/Info.plist;
+				INFOPLIST_FILE = InstatextTest/Resourses/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
